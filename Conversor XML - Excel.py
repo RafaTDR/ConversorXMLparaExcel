@@ -13,6 +13,9 @@ tkWindow.title('Conversor XML para Excel')
 tkWindow.eval('tk::PlaceWindow . center')
 
 def xmlnfe():
+    tkWindow.config(cursor="circle")
+    tkWindow.update()
+
     path = filedialog.askdirectory()
 
     linha = 0
@@ -58,9 +61,9 @@ def xmlnfe():
                 
                 nprod = det.attrib
                 
-                for cProd in det.iter('{http://www.portalfiscal.inf.br/nfe}cProd'):
+                for xProd in det.iter('{http://www.portalfiscal.inf.br/nfe}xProd'):
                     
-                    codprod = cProd.text
+                    codprod = xProd.text
 
                     # VARIAVEIS PRODUTOS
                     #ICMS SN
@@ -340,10 +343,14 @@ def xmlnfe():
                
             
     savefile = filedialog.asksaveasfilename ()
-    df.to_excel( str (savefile)+ ".xlsx" , index = False)
+    df.to_excel(str(savefile)+".xlsx", index=False)
+    tkWindow.config(cursor="")
     messagebox.showinfo('Processo', 'Processo concluido')
 
 def xmlcte():
+    tkWindow.config(cursor="circle")
+    tkWindow.update()
+
     path = filedialog.askdirectory()
 
     linha = 0
@@ -449,9 +456,13 @@ def xmlcte():
             
     savefile = filedialog.asksaveasfilename ()
     df.to_excel( str (savefile)+ ".xlsx" , index = False)
+    tkWindow.config(cursor="")
     messagebox.showinfo('Processo', 'Processo concluido')
 
 def xmlnfs():
+    tkWindow.config(cursor="circle")
+    tkWindow.update()
+
     path = filedialog.askdirectory()
 
     linha = 0
@@ -585,6 +596,7 @@ def xmlnfs():
             
     savefile = filedialog.asksaveasfilename ()
     df.to_excel( str (savefile)+ ".xlsx" , index = False)
+    tkWindow.config(cursor="")
     messagebox.showinfo('Processo', 'Processo concluido')
 
 
