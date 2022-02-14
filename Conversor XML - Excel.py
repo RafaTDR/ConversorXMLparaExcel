@@ -126,6 +126,9 @@ def xmlnfe():
                     for CFOP in det.iter('{http://www.portalfiscal.inf.br/nfe}CFOP'):
                         
                         cfop = CFOP.text
+
+                    for vProd in det.iter('{http://www.portalfiscal.inf.br/nfe}vProd'):
+                        vProd = vProd.text
                         
                     for ICMS in det.iter ('{http://www.portalfiscal.inf.br/nfe}ICMS'):
 
@@ -319,7 +322,7 @@ def xmlnfe():
                     df.loc[df['id'] == linha , 'BC IPI'] = float(vbcipi)
                     df.loc[df['id'] == linha , 'ALIQ IPI'] = float(pipi)
                     df.loc[df['id'] == linha , 'VALOR IPI'] = float(vipi)
-                    df.loc[df['id'] == linha , 'PIS CST'] = (cstpis)
+                    df.loc[df['id'] == linha , 'VALOR PRODUTO'] = float(vProd)
                     df.loc[df['id'] == linha , 'BC PIS'] = float(vbcpis)
                     df.loc[df['id'] == linha , 'ALIQ PIS'] = float(ppis)
                     df.loc[df['id'] == linha , 'VALOR PIS'] = float(vpis)
