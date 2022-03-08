@@ -187,9 +187,9 @@ NqJ2iyiCmp8cRxWgSlDnhUrE3x0X/2a/+JqN4nssEd9zhniNYeI1reI9tBDvqcr7pDN56p1Pu/W8
 Y6/O8f9sOrZxGj+siwAAAABJRU5ErkJggg==
 """
 
-icondata= base64.b64decode(icon)
-tempFile= "icon.ico"
-iconfile= open(tempFile,"wb")
+icondata = base64.b64decode(icon)
+tempFile = "icon.ico"
+iconfile = open(tempFile, "wb")
 iconfile.write(icondata)
 iconfile.close()
 
@@ -205,8 +205,8 @@ def xmlnfe():
     messagebox.showinfo('Processo', 'Selecione a pasta com os XML')
     path = filedialog.askdirectory()
 
-    tkWindow.config(cursor="circle")
-    tkWindow.update()
+    messagebox.showinfo('Processo', 'Selecione onde deseja salvar o Relatório em Excel.')
+    savefile = filedialog.asksaveasfilename()
 
     linha = 0
     linhasid = {'id': range(0, 20000)}
@@ -219,8 +219,9 @@ def xmlnfe():
     for filename in os.listdir(path):
         if not filename.endswith('.xml'): continue
         fullname = os.path.join(path, filename)
-        tree = ET.parse(fullname)
-        
+        parser = ET.XMLParser(encoding='iso-8859-5')
+        tree = ET.parse(fullname, parser=parser)
+
         doc = tree.getroot()
         nodefind = doc.find('{http://www.portalfiscal.inf.br/nfe}NFe/{http://www.portalfiscal.inf.br/nfe}infNFe/{http://www.portalfiscal.inf.br/nfe}det')
 
@@ -235,13 +236,13 @@ def xmlnfe():
             
             data = ide.text
 
-        for emit in doc.iter ('{http://www.portalfiscal.inf.br/nfe}emit'):
+        for emit in doc.iter('{http://www.portalfiscal.inf.br/nfe}emit'):
         
             for CNPJ in emit.iter('{http://www.portalfiscal.inf.br/nfe}CNPJ'):
                 
                 cnpjemit = CNPJ.text
                 
-        for vNF in doc.iter ('{http://www.portalfiscal.inf.br/nfe}vNF'):
+        for vNF in doc.iter('{http://www.portalfiscal.inf.br/nfe}vNF'):
             
             vnf = vNF.text
             
@@ -538,26 +539,15 @@ def xmlnfe():
 
                     linha = linha + 1
 
-
-    messagebox.showinfo('Processo', 'Selecione onde deseja salvar o Relatório em Excel.')
-    savefile = filedialog.asksaveasfilename()
-
-    tkWindow.config(cursor="circle")
-    tkWindow.update()
-
     df.to_excel(str(savefile)+".xlsx", index=False)
-
-    messagebox.showinfo('Processo', 'Processo concluido')
-    tkWindow.config(cursor="")
-    tkWindow.update()
 
 def xmlcte():
 
     messagebox.showinfo('Processo', 'Selecione a pasta com os XML')
     path = filedialog.askdirectory()
 
-    tkWindow.config(cursor="circle")
-    tkWindow.update()
+    messagebox.showinfo('Processo', 'Selecione onde deseja salvar o Relatório em Excel.')
+    savefile = filedialog.asksaveasfilename ()
 
     linha = 0
     linhasid = {'id':range(0,20000)}
@@ -571,8 +561,9 @@ def xmlcte():
     for filename in os.listdir(path):
         if not filename.endswith('.xml'): continue
         fullname = os.path.join(path, filename)
-        tree = ET.parse(fullname)
-        
+        parser = ET.XMLParser(encoding='iso-8859-5')
+        tree = ET.parse(fullname, parser=parser)
+
         doc = tree.getroot()
         nodefind = doc.find('{http://www.portalfiscal.inf.br/nfe}NFe/{http://www.portalfiscal.inf.br/nfe}infNFe/{http://www.portalfiscal.inf.br/nfe}det')
         
@@ -652,25 +643,15 @@ def xmlcte():
 
                 linha = linha + 1
 
-    messagebox.showinfo('Processo', 'Selecione onde deseja salvar o Relatório em Excel.')
-    savefile = filedialog.asksaveasfilename ()
-
-    tkWindow.config(cursor="circle")
-    tkWindow.update()
-
     df.to_excel( str (savefile)+ ".xlsx" , index = False)
-
-    messagebox.showinfo('Processo', 'Processo concluido')
-    tkWindow.config(cursor="")
-    tkWindow.update()
 
 def xmlnfs():
 
     messagebox.showinfo('Processo', 'Selecione a pasta com os XML')
     path = filedialog.askdirectory()
 
-    tkWindow.config(cursor="circle")
-    tkWindow.update()
+    messagebox.showinfo('Processo', 'Selecione onde deseja salvar o Relatório em Excel.')
+    savefile = filedialog.asksaveasfilename ()
 
     linha = 0
     linhasid = {'id':range(0,20000)}
@@ -684,7 +665,8 @@ def xmlnfs():
     for filename in os.listdir(path):
         if not filename.endswith('.xml'): continue
         fullname = os.path.join(path, filename)
-        tree = ET.parse(fullname)
+        parser = ET.XMLParser(encoding='iso-8859-5')
+        tree = ET.parse(fullname, parser=parser)
         
         doc = tree.getroot()
         nodefind = doc.find('{http://www.portalfiscal.inf.br/nfe}NFe/{http://www.portalfiscal.inf.br/nfe}infNFe/{http://www.portalfiscal.inf.br/nfe}det')
@@ -793,59 +775,46 @@ def xmlnfs():
 
                 linha = linha + 1
 
-    messagebox.showinfo('Processo', 'Selecione onde deseja salvar o Relatório em Excel.')
-    savefile = filedialog.asksaveasfilename ()
-
-    tkWindow.config(cursor="circle")
-    tkWindow.update()
-
     df.to_excel( str (savefile)+ ".xlsx" , index = False)
 
-    messagebox.showinfo('Processo', 'Processo concluido')
-    tkWindow.config(cursor="")
-    tkWindow.update()
-
-def processonfe():
-    loading_process = threading.Thread(target=xmlnfe)
+def processo(processo):
+    loading_process = threading.Thread(target=processo)
     loading_process.start()
     loading()
     while loading_process.is_alive():
         tkWindow.config(cursor="circle")
         tkWindow.update()
-
-def processocte():
-    loading_process = threading.Thread(target=xmlcte)
-    loading_process.start()
-    loading()
-    while loading_process.is_alive():
-        tkWindow.config(cursor="circle")
-        tkWindow.update()
-
-def processonfs():
-    loading_process = threading.Thread(target=xmlnfs)
-    loading_process.start()
-    loading()
-    while loading_process.is_alive():
-        tkWindow.config(cursor="circle")
+    else:
+        messagebox.showinfo('Processo', 'Processo concluido')
+        tkWindow.config(cursor="")
         tkWindow.update()
 
 def loading():
     messagebox.showinfo('Processando', 'Aguarde!')
 
+def executarnfe():
+    processo(xmlnfe)
+
+def executarcte():
+    processo(xmlcte)
+
+def executarnfs():
+    processo(xmlnfs)
+
 
 button1 = Button(tkWindow,
 	text = 'XML NFE',
-	command = processonfe)
+	command = executarnfe)
 button1.grid (row=1, column=0, columnspan=5, padx=100, ipadx=80)
 
 button2 = Button(tkWindow,
 	text = 'XML CTE',
-	command = processocte)
+	command = executarcte)
 button2.grid (row=2, column=0, columnspan=5, padx=10, ipadx=81)
 
 button3 = Button(tkWindow,
 	text = 'XML NFS CXS',
-	command = processonfs)
+	command = executarnfs)
 button3.grid (row=3, column=0, columnspan=5, padx=10, ipadx=68)
 
 
