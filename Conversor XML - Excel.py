@@ -193,7 +193,8 @@ iconfile = open(tempFile, "wb")
 iconfile.write(icondata)
 iconfile.close()
 
-tkWindow = Tk()  
+tkWindow = Tk()
+tkWindow.configure(background="lightgray")
 tkWindow.geometry('400x150')  
 tkWindow.title('Conversor XML para Excel')
 tkWindow.eval('tk::PlaceWindow . center')
@@ -225,9 +226,10 @@ def xmlnfe():
         doc = tree.getroot()
         nodefind = doc.find('{http://www.portalfiscal.inf.br/nfe}NFe/{http://www.portalfiscal.inf.br/nfe}infNFe/{http://www.portalfiscal.inf.br/nfe}det')
 
-        
         infCpl = ""
-        
+        vpisret = 0
+        vcofinsret = 0
+
         for ide in doc.iter('{http://www.portalfiscal.inf.br/nfe}nNF'):
             
             numeronfe = ide.text
@@ -241,11 +243,17 @@ def xmlnfe():
             for CNPJ in emit.iter('{http://www.portalfiscal.inf.br/nfe}CNPJ'):
                 
                 cnpjemit = CNPJ.text
-                
+
+        for vRetPIS in doc.iter('{http://www.portalfiscal.inf.br/nfe}vRetPIS'):
+            vpisret = vRetPIS.text
+
+        for vRetCOFINS in doc.iter('{http://www.portalfiscal.inf.br/nfe}vRetCOFINS'):
+            vcofinsret = vRetCOFINS.text
+
         for vNF in doc.iter('{http://www.portalfiscal.inf.br/nfe}vNF'):
             
             vnf = vNF.text
-            
+
 
             for det in doc.iter ('{http://www.portalfiscal.inf.br/nfe}det'):
                 
@@ -527,11 +535,11 @@ def xmlnfe():
                     df.loc[df['id'] == linha , 'VALOR PRODUTO'] = float(vProd) + float(vFrete) + float(vOutro) - float(vDesc)
                     df.loc[df['id'] == linha , 'BC PIS'] = float(vbcpis)
                     df.loc[df['id'] == linha , 'ALIQ PIS'] = float(ppis)
-                    df.loc[df['id'] == linha , 'VALOR PIS'] = float(vpis)
+                    df.loc[df['id'] == linha , 'VALOR PIS RET'] = float(vpisret)
                     df.loc[df['id'] == linha , 'COFINS CST'] = (cstcofins)
                     df.loc[df['id'] == linha , 'BC COFINS'] = float(vbccofins)
                     df.loc[df['id'] == linha , 'ALIQ COFINS'] = float(pcofins)
-                    df.loc[df['id'] == linha , 'VALOR COFINS'] = float(vcofins)
+                    df.loc[df['id'] == linha , 'VALOR COFINS RET'] = float(vcofinsret)
                     df.loc[df['id'] == linha , 'BC DIFAL'] = float(vBCUFDest)
                     df.loc[df['id'] == linha , 'ALIQ DIFAL'] = float(pICMSUFDest)
                     df.loc[df['id'] == linha , 'VALOR DIFAL'] = float(vICMSUFDest)
@@ -804,18 +812,20 @@ def executarnfs():
 
 button1 = Button(tkWindow,
 	text = 'XML NFE',
-	command = executarnfe)
-button1.grid (row=1, column=0, columnspan=5, padx=100, ipadx=80)
+	command = executarnfe, height = 1, width = 10)
+#button1.grid (row=1, column=0, columnspan=5, padx=100, ipadx=80)
+button1.place(relx=0.5, rely=0.2, anchor=CENTER)
 
 button2 = Button(tkWindow,
 	text = 'XML CTE',
-	command = executarcte)
-button2.grid (row=2, column=0, columnspan=5, padx=10, ipadx=81)
+	command = executarcte, height = 1, width = 10)
+#button2.grid (row=2, column=0, columnspan=5, padx=10, ipadx=81)
+button2.place(relx=0.5, rely=0.4, anchor=CENTER)
 
 button3 = Button(tkWindow,
 	text = 'XML NFS CXS',
-	command = executarnfs)
-button3.grid (row=3, column=0, columnspan=5, padx=10, ipadx=68)
-
+	command = executarnfs, height = 1, width = 10)
+#button3.grid (row=3, column=0, columnspan=5, padx=10, ipadx=68)
+button3.place(relx=0.5, rely=0.6, anchor=CENTER)
 
 tkWindow.mainloop()
