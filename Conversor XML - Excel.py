@@ -270,6 +270,7 @@ def xmlnfe():
                     icmssn = 0
                     orig = ""
                     #ICMS NORMAL
+                    vICMSDeson = 0
                     csticms = ""
                     vbcicms = 0
                     picms = 0
@@ -278,6 +279,10 @@ def xmlnfe():
                     vbcst = 0
                     pst = 0
                     vst = 0
+                    # FCP ST
+                    vBCFCPST = 0
+                    pFCPST = 0
+                    vFCPST = 0
                     # FCP
                     pfcp = 0
                     vfcp = 0
@@ -319,6 +324,7 @@ def xmlnfe():
                     vFrete = 0
                     vDesc = 0
                     vOutro = 0
+                    vSeg = 0
 
                     for NCM in det.iter('{http://www.portalfiscal.inf.br/nfe}NCM'):
                         
@@ -339,6 +345,9 @@ def xmlnfe():
 
                     for vOutro in det.iter('{http://www.portalfiscal.inf.br/nfe}vOutro'):
                         vOutro = vOutro.text
+
+                    for vSeg in det.iter('{http://www.portalfiscal.inf.br/nfe}vSeg'):
+                        vSeg = vSeg.text
 
                     for ICMS in det.iter ('{http://www.portalfiscal.inf.br/nfe}ICMS'):
 
@@ -376,6 +385,9 @@ def xmlnfe():
                             
                             icmsnorm = vICMS.text
 
+                        for vICMSDeson in ICMS.iter('{http://www.portalfiscal.inf.br/nfe}vICMSDeson'):
+                            vICMSDeson = vICMSDeson.text
+
                         # ICMS ST
                         for vBCST in ICMS.iter ('{http://www.portalfiscal.inf.br/nfe}vBCST'):
                             
@@ -388,6 +400,16 @@ def xmlnfe():
                         for vICMSST in ICMS.iter ('{http://www.portalfiscal.inf.br/nfe}vICMSST'):
                             
                             vst = vICMSST.text
+
+                        # FCP ST
+                        for vBCFCPST in ICMS.iter('{http://www.portalfiscal.inf.br/nfe}vBCFCPST'):
+                            vBCFCPST = vBCFCPST.text
+
+                        for pFCPST in ICMS.iter('{http://www.portalfiscal.inf.br/nfe}pFCPST'):
+                                pFCPST = pFCPST.text
+
+                        for vFCPST in ICMS.iter('{http://www.portalfiscal.inf.br/nfe}vFCPST'):
+                             vFCPST = vFCPST.text
 
                         # ICMS EFET    
                         for vBCEfet in ICMS.iter ('{http://www.portalfiscal.inf.br/nfe}vBCEfet'):
@@ -519,8 +541,8 @@ def xmlnfe():
                     df.loc[df['id'] == linha , 'BC ICMS ST'] = float(vbcst)
                     df.loc[df['id'] == linha , 'ALIQ ICMS ST'] = float(pst)
                     df.loc[df['id'] == linha , 'VALOR ICMS ST'] = float(vst)
-                    df.loc[df['id'] == linha , 'ALIQ FCP'] = float(pfcp)
-                    df.loc[df['id'] == linha , 'VALOR FCP'] = float(vfcp)
+                    df.loc[df['id'] == linha , 'ALIQ FCP/ FCP ST'] = float(pfcp) + float(pFCPST)
+                    df.loc[df['id'] == linha , 'VALOR FCP / FCP ST'] = float(vfcp) + float(vFCPST)
                     df.loc[df['id'] == linha , 'BC ICMS EFET'] = float(vbcefet)
                     df.loc[df['id'] == linha , 'ALIQ ICMS EFET'] = float(pefet)
                     df.loc[df['id'] == linha , 'VALOR ICMS EFET'] = float(vefet)
@@ -532,7 +554,7 @@ def xmlnfe():
                     df.loc[df['id'] == linha , 'BC IPI'] = float(vbcipi)
                     df.loc[df['id'] == linha , 'ALIQ IPI'] = float(pipi)
                     df.loc[df['id'] == linha , 'VALOR IPI'] = float(vipi)
-                    df.loc[df['id'] == linha , 'VALOR PRODUTO'] = float(vProd) + float(vFrete) + float(vOutro) - float(vDesc)
+                    df.loc[df['id'] == linha , 'VALOR PRODUTO'] = float(vProd) + float(vFrete) + float(vOutro) - float(vDesc) + float(vSeg) - float(vICMSDeson)
                     df.loc[df['id'] == linha , 'BC PIS'] = float(vbcpis)
                     df.loc[df['id'] == linha , 'ALIQ PIS'] = float(ppis)
                     df.loc[df['id'] == linha , 'VALOR PIS RET'] = float(vpisret)
