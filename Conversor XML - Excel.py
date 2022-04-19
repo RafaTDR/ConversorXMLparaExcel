@@ -627,6 +627,10 @@ def xmlcte():
             picms = 0
             icmsnorm = 0
 
+            vBCOutraUF = 0
+            pICMSOutraUF = 0
+            vICMSOutraUF = 0
+
                         
         for CFOP in doc.iter('{http://www.portalfiscal.inf.br/cte}CFOP'):
                         
@@ -651,6 +655,17 @@ def xmlcte():
             for vICMS in ICMS.iter ('{http://www.portalfiscal.inf.br/cte}vICMS'):
                             
                             icmsnorm = vICMS.text
+
+                        # ICMS OUTRA UF
+
+            for vBCOutraUF in ICMS.iter('{http://www.portalfiscal.inf.br/cte}vBCOutraUF'):
+                vBCOutraUF = vBCOutraUF.text
+
+            for pICMSOutraUF in ICMS.iter('{http://www.portalfiscal.inf.br/cte}pICMSOutraUF'):
+                pICMSOutraUF = pICMSOutraUF.text
+
+            for vICMSOutraUF in ICMS.iter('{http://www.portalfiscal.inf.br/cte}vICMSOutraUF'):
+                vICMSOutraUF = vICMSOutraUF.text
                         
         for infDoc in doc.iter ('{http://www.portalfiscal.inf.br/cte}infDoc'):
             for chave in infDoc.iter ('{http://www.portalfiscal.inf.br/cte}chave'):
@@ -665,9 +680,9 @@ def xmlcte():
                 df.loc[df['id'] == linha , 'VALOR'] = float(vcte)    
                 df.loc[df['id'] == linha , 'CFOP'] = (cfop)
                 df.loc[df['id'] == linha , 'ICMS CST'] = (csticms)
-                df.loc[df['id'] == linha , 'BC ICMS'] = float(vbcicms)
-                df.loc[df['id'] == linha , 'ALIQ ICMS'] = float(picms)
-                df.loc[df['id'] == linha , 'VALOR ICMS'] = float(icmsnorm)
+                df.loc[df['id'] == linha , 'BC ICMS'] = float(vbcicms) + float(vBCOutraUF)
+                df.loc[df['id'] == linha , 'ALIQ ICMS'] = float(picms) + float(pICMSOutraUF)
+                df.loc[df['id'] == linha , 'VALOR ICMS'] = float(icmsnorm) + float(vICMSOutraUF)
                 df.loc[df['id'] == linha , 'CHAVE'] = str(chave)
                     
 
