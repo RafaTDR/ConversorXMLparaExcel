@@ -599,11 +599,11 @@ def xmlcte():
         
         
         infCpl = ""
-        
+        chave = ""
         for ide in doc.iter('{http://www.portalfiscal.inf.br/cte}nCT'):
             
             numerocte = ide.text
-        
+
         for ide in doc.iter('{http://www.portalfiscal.inf.br/cte}dhEmi'):
             
             data = ide.text
@@ -620,7 +620,7 @@ def xmlcte():
             
 
                     # VARIAVEIS PRODUTOS
-            chave = ""        
+
                     #ICMS NORMAL
             csticms = ""
             vbcicms = 0
@@ -666,27 +666,43 @@ def xmlcte():
 
             for vICMSOutraUF in ICMS.iter('{http://www.portalfiscal.inf.br/cte}vICMSOutraUF'):
                 vICMSOutraUF = vICMSOutraUF.text
-                        
-        for infDoc in doc.iter ('{http://www.portalfiscal.inf.br/cte}infDoc'):
-            for chave in infDoc.iter ('{http://www.portalfiscal.inf.br/cte}chave'):
-                        
-                chave = chave.text    
-                            
-                    
-                  
-                df.loc[df['id'] == linha , 'CTE'] = (numerocte)
-                df.loc[df['id'] == linha , 'CNPJ'] = str(cnpjemit)
-                df.loc[df['id'] == linha , 'DATA'] = (data)
-                df.loc[df['id'] == linha , 'VALOR'] = float(vcte)    
-                df.loc[df['id'] == linha , 'CFOP'] = (cfop)
-                df.loc[df['id'] == linha , 'ICMS CST'] = (csticms)
-                df.loc[df['id'] == linha , 'BC ICMS'] = float(vbcicms) + float(vBCOutraUF)
-                df.loc[df['id'] == linha , 'ALIQ ICMS'] = float(picms) + float(pICMSOutraUF)
-                df.loc[df['id'] == linha , 'VALOR ICMS'] = float(icmsnorm) + float(vICMSOutraUF)
-                df.loc[df['id'] == linha , 'CHAVE'] = str(chave)
-                    
 
-                linha = linha + 1
+        busca = doc.find('{http://www.portalfiscal.inf.br/cte}CTe/{http://www.portalfiscal.inf.br/cte}infCte/{http://www.portalfiscal.inf.br/cte}infCTeNorm/{http://www.portalfiscal.inf.br/cte}infDoc/{http://www.portalfiscal.inf.br/cte}infNFe/{http://www.portalfiscal.inf.br/cte}chave')
+        if busca is not None:
+            for infDoc in doc.iter ('{http://www.portalfiscal.inf.br/cte}infDoc'):
+
+                for chave in infDoc.iter('{http://www.portalfiscal.inf.br/cte}chave'):
+                    chave = chave.text
+
+                    df.loc[df['id'] == linha , 'CTE'] = (numerocte)
+                    df.loc[df['id'] == linha , 'CNPJ'] = str(cnpjemit)
+                    df.loc[df['id'] == linha , 'DATA'] = (data)
+                    df.loc[df['id'] == linha , 'VALOR'] = float(vcte)
+                    df.loc[df['id'] == linha , 'CFOP'] = (cfop)
+                    df.loc[df['id'] == linha , 'ICMS CST'] = (csticms)
+                    df.loc[df['id'] == linha , 'BC ICMS'] = float(vbcicms) + float(vBCOutraUF)
+                    df.loc[df['id'] == linha , 'ALIQ ICMS'] = float(picms) + float(pICMSOutraUF)
+                    df.loc[df['id'] == linha , 'VALOR ICMS'] = float(icmsnorm) + float(vICMSOutraUF)
+                    df.loc[df['id'] == linha , 'CHAVE'] = str(chave)
+
+
+                    linha = linha + 1
+        else:
+
+            df.loc[df['id'] == linha, 'CTE'] = (numerocte)
+            df.loc[df['id'] == linha, 'CNPJ'] = str(cnpjemit)
+            df.loc[df['id'] == linha, 'DATA'] = (data)
+            df.loc[df['id'] == linha, 'VALOR'] = float(vcte)
+            df.loc[df['id'] == linha, 'CFOP'] = (cfop)
+            df.loc[df['id'] == linha, 'ICMS CST'] = (csticms)
+            df.loc[df['id'] == linha, 'BC ICMS'] = float(vbcicms) + float(vBCOutraUF)
+            df.loc[df['id'] == linha, 'ALIQ ICMS'] = float(picms) + float(pICMSOutraUF)
+            df.loc[df['id'] == linha, 'VALOR ICMS'] = float(icmsnorm) + float(vICMSOutraUF)
+            df.loc[df['id'] == linha, 'CHAVE'] = str(chave)
+
+            linha = linha + 1
+
+
 
     df.to_excel( str (savefile)+ ".xlsx" , index = False)
 
