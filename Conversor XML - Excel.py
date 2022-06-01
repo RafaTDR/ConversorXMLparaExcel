@@ -215,6 +215,7 @@ def xmlnfe():
     numeronfe = ""
     data = ""
     cnpjemit = ""
+    chNFe = ""
     df = pd.DataFrame(linhasid)
 
     for filename in os.listdir(path):
@@ -243,6 +244,11 @@ def xmlnfe():
             for CNPJ in emit.iter('{http://www.portalfiscal.inf.br/nfe}CNPJ'):
                 
                 cnpjemit = CNPJ.text
+
+        for infProt in doc.iter('{http://www.portalfiscal.inf.br/nfe}infProt'):
+
+            for chNFe in infProt.iter('{http://www.portalfiscal.inf.br/nfe}chNFe'):
+                chNFe = chNFe.text
 
         for vRetPIS in doc.iter('{http://www.portalfiscal.inf.br/nfe}vRetPIS'):
             vpisret = vRetPIS.text
@@ -329,6 +335,9 @@ def xmlnfe():
                     for NCM in det.iter('{http://www.portalfiscal.inf.br/nfe}NCM'):
                         
                         ncm = NCM.text
+
+                    for cProd in det.iter('{http://www.portalfiscal.inf.br/nfe}cProd'):
+                        cProd = cProd.text
                         
                     for CFOP in det.iter('{http://www.portalfiscal.inf.br/nfe}CFOP'):
                         
@@ -566,6 +575,8 @@ def xmlnfe():
                     df.loc[df['id'] == linha , 'ALIQ DIFAL'] = float(pICMSUFDest)
                     df.loc[df['id'] == linha , 'VALOR DIFAL'] = float(vICMSUFDest)
                     df.loc[df['id'] == linha , 'ORIGEM ICMS'] = (orig)
+                    df.loc[df['id'] == linha, 'COD PROD'] = str(cProd)
+                    df.loc[df['id'] == linha, 'CHAVE'] = str(chNFe)
 
                     linha = linha + 1
 
